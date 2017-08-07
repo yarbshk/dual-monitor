@@ -14,6 +14,8 @@ It's recommended (**for quick access**) place the `.dual-monitor` script into th
 ```bash
 $ mv .dual-monitor ~/
 ```
+
+### Initialization
 1. Setup proper **output names** (may be specific for your system). You can see a list of output names by the following command:
     ```bash
     $ xrandr
@@ -23,10 +25,29 @@ $ mv .dual-monitor ~/
     $ sudo chmod +x .dual-monitor
     ```
 
-3. **Use the script** (the following command prints a manual):
+### How to use
+1. **See the docs at first** (the following command prints a manual):
     ```bash
     $ bash .dual-monitor
     ```
+2. **Create a mode** (there are default arguments for clarity):
+    ```bash
+    $ bash .dual-monitor -c -w 1280 -h 1024 -r 60
+    ```
+3. **Enable the mode**:
+    ```bash
+    $ bash .dual-monitor -e
+    ```
+    You should see the output of the `x11vnc` server. Find a string similar as below there to **obtain necessary information** (host and port) to connect a vnc viewer (IP address of the host determines automatically):
+    ```
+    The VNC desktop is:      192.168.1.103:1
+    PORT=5901
+    ```
+4. **Disable the mode** and close the tracks:
+    ```bash
+    $ bash .dual-monitor -d -w 1280 -h 1024 -r 60
+    ```
+    You should use **same arguments as when connecting** to disable necessary mode (in other case it may disable any other mode)!
 
 Use primary commands **in order** mentioned in the documentation **if you don't understand** how `xrandr` works (in other case unexpected behavior may occur).
 
