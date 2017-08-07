@@ -1,10 +1,9 @@
 #!/bin/bash
-# Error handling
 set -e
 
 # Default mutable values. Change it if you need
 WIDTH=1280
-HEIGTH=800
+HEIGHT=800
 REFRESH=60
 PRIMARY_OUTPUT=LVDS-1
 VIRTUAL_OUTPUT=VGA-1
@@ -15,22 +14,25 @@ ENABLE=false
 DISABLE=false
 
 # Get custom initial parameters
-while getopts "cdeh:w:" option; do
+while getopts "cdeh:p:r:v:w:" option; do
     case "${option}" in
         c) CREATE=true;;
         d) DISABLE=true;;
         e) ENABLE=true;;
-        h) HEIGTH=${OPTARG};;
+        h) HEIGHT=${OPTARG};;
+        p) PRIMARY_OUTPUT=${OPTARG};;
+        r) REFRESH=${OPTARG};;
+        v) VIRTUAL_OUTPUT=${OPTARG};;
         w) WIDTH=${OPTARG};;
     esac
 done
 
-NAME="${WIDTH}x${HEIGTH}"
+NAME="${WIDTH}x${HEIGHT}"
 
 if [ ${CREATE} == true ]; then
     echo "Creating a virtual display..."
     # Extract and output generated modeline parameters
-    MODELINE="$(gtf ${WIDTH} ${HEIGTH} ${REFRESH} \
+    MODELINE="$(gtf ${WIDTH} ${HEIGHT} ${REFRESH} \
                   | sed -n 's/.*Modeline ".\+"  \(.*\)/\1/p')"
     printf "
         Name: ${NAME}
@@ -68,5 +70,26 @@ elif [ ${ENABLE} == true ]; then
            -nocursorpos \
            -nocursorshape
 else
-    echo "Help here!"
+    printf "
+    PRIMARY COMMANDS (without args):
+    -c – create a mode for a virtual output
+    -e – enable a mode of a virtual output
+    -d – disable a mode of a virtual output
+
+    CONFIGURATION:
+    -h – height of a virtual screen
+         default '800'
+         used with the '-c' and '-d' flags
+    -p – primary output name
+         default 'LVDS-1'
+         used with the '-c' flag
+    -r – refresh frequency of a virtual screen
+         default '60'
+         used with the '-c' flag
+    -v – virtual output name
+         default 'VGA-1'
+         used with the '-c' and '-d' flags
+    -w – width of a virtual screen
+         default '1280'
+         used with the '-c' and '-d' flags\n\n"
 fi
