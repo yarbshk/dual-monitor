@@ -1,0 +1,72 @@
+#!/bin/bash
+# Error handling
+set -e
+
+# Default mutable values. Change it if you need
+WIDTH=1280
+HEIGTH=800
+REFRESH=60
+PRIMARY_OUTPUT=LVDS-1
+VIRTUAL_OUTPUT=VGA-1
+
+# Default immutable values. Don't touch it!
+CREATE=false
+ENABLE=false
+DISABLE=false
+
+# Get custom initial parameters
+while getopts "cdeh:w:" option; do
+    case "${option}" in
+        c) CREATE=true;;
+        d) DISABLE=true;;
+        e) ENABLE=true;;
+        h) HEIGTH=${OPTARG};;
+        w) WIDTH=${OPTARG};;
+    esac
+done
+
+NAME="${WIDTH}x${HEIGTH}"
+
+if [ ${CREATE} == true ]; then
+    echo "Creating a virtual display..."
+    # Extract and output generated modeline parameters
+    MODELINE="$(gtf ${WIDTH} ${HEIGTH} ${REFRESH} \
+                  | sed -n 's/.*Modeline ".\+"  \(.*\)/\1/p')"
+    printf "
+        Name: ${NAME}
+        Primary output: ${PRIMARY_OUTPUT}
+        Virtual output: ${VIRTUAL_OUTPUT}
+        Modeline: ${MODELINE}\n\n"
+    # Generate new mode based on the modeline
+    echo "[1/3] - Creating a mode with modeline args"
+    xrandr --newmode "${NAME}" ${MODELINE}
+    # Add the desired mode to our disconnected output
+    echo "[2/3] - Adding the mode to the output"
+    xrandr --addmode "${VIRTUAL_OUTPUT}" "${NAME}"
+    # Enable the virtual monitor using the newly added mode
+    echo "[3/3] - Enabling the newly created mode"
+    xrandr --output "${VIRTUAL_OUTPUT}" \
+           --mode "${NAME}" \
+           --right-of "${PRIMARY_OUTPUT}"
+    echo "Successfully created!"
+elif [ ${DISABLE} == true ]; then
+    echo "Disabling the virtual output..."
+    # Disconnect the output to be able to delete a mode if any
+    echo "[1/3] - Disconnecting the output"
+    xrandr --output "${VIRTUAL_OUTPUT}" --off
+    # Deleting the mode of the disconnected output
+    echo "[2/3] - Deleting the output mode"
+    xrandr --delmode "${VIRTUAL_OUTPUT}" "${NAME}" || :
+    # Deleting the display port which was using by the mode
+    echo "[3/3] - Deleting the display port"
+    echo "Successfully disabled!"
+elif [ ${ENABLE} == true ]; then
+    echo "Starting the VNC server..."
+    HOST_IP="$(hostname -I | head -n1 | awk '{print $1;}')"
+    x11vnc -listen "${HOST_IP}" \
+           -clip "xinerama1" \
+           -nocursorpos \
+           -nocursorshape
+else
+    echo "Help here!"
+fi
