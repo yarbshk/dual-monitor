@@ -10,9 +10,9 @@ The following packages should be installed:
 I was inspired to write the script by [this article](https://bbs.archlinux.org/viewtopic.php?id=191555). Thank you **kjans** for your community contribution :)
 
 ## Getting started
-It's recommended (for quick access) place the `.dual-display` script into the home directory (however you can place it wherever you want):
+It's recommended (**for quick access**) place the `.dual-monitor` script into the home directory (however you can place it wherever you want):
 ```bash
-$ mv .dual-display ~/
+$ mv .dual-monitor ~/
 ```
 1. Setup proper **output names** (may be specific for your system). You can see a list of output names by the following command:
     ```bash
@@ -20,15 +20,15 @@ $ mv .dual-display ~/
     ```
 2. Provide **executable permissions** for the script:
     ```bash
-    $ sudo chmod +x .dual-display
+    $ sudo chmod +x .dual-monitor
     ```
 
 3. **Use the script** (the following command prints a manual):
     ```bash
-    $ bash .dual-display
+    $ bash .dual-monitor
     ```
 
-Use primary commands **in order** mentioned in the documentation if you don't understand how `xrandr` works (in other case unexpected behavior may occur).
+Use primary commands **in order** mentioned in the documentation **if you don't understand** how `xrandr` works (in other case unexpected behavior may occur).
 
 Don't try to create several same modes (with identical parameters) per a user session! That will not work ;)
 
