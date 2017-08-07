@@ -61,6 +61,7 @@ elif [ ${DISABLE} == true ]; then
     xrandr --delmode "${VIRTUAL_OUTPUT}" "${NAME}" || :
     # Deleting the display port which was using by the mode
     echo "[3/3] - Deleting the display port"
+    xrandr --rmmode "${NAME}" || :
     echo "Successfully disabled!"
 elif [ ${ENABLE} == true ]; then
     echo "Starting the VNC server..."
