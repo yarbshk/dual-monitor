@@ -33,7 +33,7 @@ Use primary commands **in order** mentioned in the documentation if you don't un
 Don't try to create several same modes (with identical parameters) per a user session! That will not work ;)
 
 ## Documentation
-### Primary commands
+### Primary commands (without args)
 `**-c**` – **create** a mode for a virtual output.
 
 `**-e**` – **enable** a mode of a virtual output.
@@ -51,7 +51,7 @@ Don't try to create several same modes (with identical parameters) per a user se
 
 `**-v**` – **virtual output name** (default `VGA-1`, used with the `-c` and `-d` flags).
 
-`**-w**` – **width** of a virtual screen (used with the `-c` and `-d` flags).
+`**-w**` – **width** of a virtual screen (default `1280`, used with the `-c` and `-d` flags).
 
 
 ## Copyright and License
